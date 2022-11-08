@@ -1,6 +1,6 @@
 # ansible-wkhtmltopdf
 
-Setups Docker.
+Setups [wkhtmltopdf](https://wkhtmltopdf.org/).
 
 ### Example playbook
 ```yaml
