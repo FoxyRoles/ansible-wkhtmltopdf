@@ -1,0 +1,24 @@
+---
+
+- name: Check if wkhtmltox is installed
+  command: dpkg-query -W wkhtmltox
+  register: wkhtmltox_deb
+  failed_when: wkhtmltox_deb.rc > 1
+  changed_when: wkhtmltox_deb.rc == 1
+
+- name: Download wkhtmltox_{{ wkhtmltopdf_version }}.{{ ansible_distribution_release }}_amd64.deb
+  get_url: 
+    url: "https://github.com/wkhtmltopdf/packaging/releases/download/{{ wkhtmltopdf_version }}/wkhtmltox_0.12.6-1.{{ ansible_distribution_release }}_amd64.deb"
+    dest: /tmp/wkhtmltox.deb
+  when: wkhtmltox_deb.rc == 1
+
+- name: Install wkhtmltox
+  apt:
+    deb: /tmp/wkhtmltox.deb
+  when: wkhtmltox_deb.rc == 1
+
+- name: Delete wkhtmltox_{{ wkhtmltopdf_version }}.{{ ansible_distribution_release }}_amd64.deb
+  file:
+    path: /tmp/wkhtmltox.deb
+    state: absent
+  when: wkhtmltox_deb.rc == 1
